@@ -1,7 +1,7 @@
-
+import Hero from "./components/Hero"
 function App() {
   return (
-    <h1>Meal Maker</h1>
+    <Hero />
   )
 }
 
