@@ -1,7 +1,9 @@
-import { FC, useEffect, useState } from "react";
+import { FC } from "react";
+import useFetch, { FetchResult } from "../hooks/useFetch";
 
 interface ImageGridProps {
   title: string;
+  queryString: string;
 }
 
 interface Image {
@@ -9,30 +11,27 @@ interface Image {
   id: string;
 }
 
-const ImageGrid: FC<ImageGridProps> = ({ title }) => {
-  const [randomImages, setRandomImages] = useState<Image[]>([]);
-
-  useEffect(() => {
-    fetch("https://picsum.photos/v2/list?page=2&limit=4").then((response) =>
-      response.json().then((data) => {
-        setRandomImages(data);
-      })
-    );
-  }, []);
+const ImageGrid: FC<ImageGridProps> = ({ title, queryString }) => {
+  // Use FetchResult<Image[]> since the fetched data is an array of Image objects
+  const { data, error, loading }: FetchResult<Image[]> = useFetch(
+    `https://picsum.photos/v2/list?${queryString}`
+  );
 
   return (
     <section className="container mx-auto p-4">
       <div className="flex flex-col">
         <h2 className="mb-8 text-2xl">{title}</h2>
-        <div className="grid grid-cols-4 gap-4">
-          {randomImages.map((img) => {
-            return (
+        {loading && <p>Content loading...</p>}
+        {error && <p>Error: {error}</p>}
+        {!loading && !error && data && (
+          <div className="grid grid-cols-4 gap-4">
+            {data.map((img) => (
               <div className="block" key={img.id}>
-                <img src={img.download_url} />
+                <img src={img.download_url} alt={`Image ${img.id}`} />
               </div>
-            );
-          })}
-        </div>
+            ))}
+          </div>
+        )}
       </div>
     </section>
   );
