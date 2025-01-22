@@ -1,8 +1,12 @@
-import Hero from "./components/Hero"
+import Hero from "./components/Hero";
+import ImageGrid from "./components/ImageGrid";
 function App() {
   return (
-    <Hero />
-  )
+    <>
+      <Hero />
+      <ImageGrid title="Lorem Ipsum sit dolor" />
+    </>
+  );
 }
 
-export default App
+export default App;
